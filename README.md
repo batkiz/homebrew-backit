@@ -4,16 +4,21 @@
 
 ## 安装
 
-从现有本地仓库安装，在本仓库根目录执行：
+首次使用时，在终端添加并信任此 tap。
 
 ```sh
-brew tap batkiz/backit "$PWD"
+brew tap batkiz/backit
 brew trust --tap batkiz/backit
+```
+
+从[收录记录](INVENTORY.md)选择软件。下面两条命令分别安装命令行工具 Redis Viewer 和桌面应用 Wake，可按需执行。
+
+```sh
 brew install batkiz/backit/redis-viewer
 brew install --cask batkiz/backit/wake
 ```
 
-仓库发布到 GitHub 的 `batkiz/homebrew-backit` 后，首次添加可使用 `brew tap batkiz/backit`。之后使用 `brew update` 和 `brew upgrade` 更新。
+更新时，先用 `brew update` 刷新软件清单，再用 `brew upgrade` 升级已安装的软件。
 
 `beetcb-ghdl` 和 `misawa-xq` 的命令名与这里的包名相同，方便与 Homebrew 里同名的其他工具共存。仅有 Intel 发行版的包在定义中标明架构。Apple Silicon 版 `kaf-cli` 可以原生生成 EPUB，其随附的 MOBI 转换工具 `kindlegen` 是 Intel 程序。
 
