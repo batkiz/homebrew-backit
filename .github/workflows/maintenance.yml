@@ -1,0 +1,33 @@
+name: Review upstream changes
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: macos-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compare the active Scoop bucket with the reviewed inventory
+        shell: bash
+        run: |
+          gh api repos/batkiz/backit/contents/bucket --jq '.[] | select(.name | endswith(".json")) | .name | rtrimstr(".json")' | LC_ALL=C sort > "$RUNNER_TEMP/bucket"
+          sed -n 's/^| `\([^`]*\)` |.*/\1/p' INVENTORY.md | LC_ALL=C sort > "$RUNNER_TEMP/reviewed"
+          echo '### Scoop bucket changes' >> "$GITHUB_STEP_SUMMARY"
+          diff -u "$RUNNER_TEMP/reviewed" "$RUNNER_TEMP/bucket" >> "$GITHUB_STEP_SUMMARY" || test "$?" = 1
+      - name: Check for newer macOS releases
+        shell: bash
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+        run: |
+          brew tap batkiz/backit "$GITHUB_WORKSPACE"
+          brew trust --tap batkiz/backit
+          brew livecheck --tap=batkiz/backit --newer-only | tee -a "$GITHUB_STEP_SUMMARY"
