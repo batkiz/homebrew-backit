@@ -24,7 +24,7 @@ brew install --cask batkiz/backit/wake
 3. 将命令行工具放在 `Formula/`，桌面应用放在 `Casks/`。为各架构固定上游 URL 和 SHA-256，使用发行方公布的摘要或实际下载文件计算的摘要。更新 [INVENTORY.md](INVENTORY.md) 中对应的行。
 4. 若 Homebrew 或上游接手了已收录项目，在收录记录中写明新的安装渠道，并在弃用原包时给出迁移说明。
 
-`Review upstream changes` 每周一运行，也可在 GitHub Actions 手动运行。运行摘要列出活动 bucket 相对收录记录增删的条目，以及 livecheck 发现的新版本。维护者核对发行文件后更新定义和摘要。推送或提交 PR 时，`Check tap` 会用 Homebrew 加载 Intel 和 Apple Silicon 两套定义，并各安装一个 Formula 和 Cask。
+`Review upstream changes` 每天北京时间 11:23 定时运行，也可在 GitHub Actions 手动运行。运行摘要列出活动 bucket 相对收录记录增删的条目，以及 livecheck 发现的新版本。维护者核对发行文件后更新定义和摘要。推送或提交 PR 时，`Check tap` 会用 Homebrew 加载 Intel 和 Apple Silicon 两套定义，并各安装一个 Formula 和 Cask。
 
 本地检查命令：
 
