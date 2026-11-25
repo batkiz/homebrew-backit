@@ -74,6 +74,7 @@
 | `markra` | 上游维护 | [markrahq/tap](https://github.com/markrahq/homebrew-tap) |
 | `mdconv` | 本 tap | [Formula/mdconv.rb](Formula/mdconv.rb) |
 | `menubarhome` | 上游维护 | [jryang2026-code/tap](https://github.com/jryang2026-code/homebrew-tap) |
+| `mingle` | 本 tap | [Casks/mingle.rb](Casks/mingle.rb) |
 | `muffet` | Homebrew 官方收录 | [muffet](https://formulae.brew.sh/formula/muffet) |
 | `murphysec` | 本 tap | [Formula/murphysec.rb](Formula/murphysec.rb) |
 | `mygo-music` | 本 tap | [Casks/mygo-music.rb](Casks/mygo-music.rb) |
