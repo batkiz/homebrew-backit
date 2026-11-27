@@ -1,33 +1,49 @@
-name: Review upstream changes
+name: Update Homebrew packages
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: update-homebrew-packages
+  cancel-in-progress: false
 
 jobs:
-  review:
+  update:
     runs-on: macos-latest
     env:
-      GH_TOKEN: ${{ github.token }}
+      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+      HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-      - name: Compare the active Scoop bucket with the reviewed inventory
+          ref: ${{ github.event.repository.default_branch }}
+      - name: Check upstream versions and update package definitions
         shell: bash
-        run: |
-          gh api repos/batkiz/backit/contents/bucket --jq '.[] | select(.name | endswith(".json")) | .name | rtrimstr(".json")' | LC_ALL=C sort > "$RUNNER_TEMP/bucket"
-          sed -n 's/^| `\([^`]*\)` |.*/\1/p' INVENTORY.md | LC_ALL=C sort > "$RUNNER_TEMP/reviewed"
-          echo '### Scoop bucket changes' >> "$GITHUB_STEP_SUMMARY"
-          diff -u "$RUNNER_TEMP/reviewed" "$RUNNER_TEMP/bucket" >> "$GITHUB_STEP_SUMMARY" || test "$?" = 1
-      - name: Check for newer macOS releases
-        shell: bash
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
         run: |
           brew tap batkiz/backit "$GITHUB_WORKSPACE"
           brew trust --tap batkiz/backit
-          brew livecheck --tap=batkiz/backit --newer-only | tee -a "$GITHUB_STEP_SUMMARY"
+          results="$RUNNER_TEMP/livecheck.json"
+          failed=0
+          brew livecheck --tap=batkiz/backit --newer-only --json > "$results" || failed=1
+          python3 .github/scripts/update-tap.py "$results" "$(brew --repository batkiz/backit)" || failed=1
+
+          if ! git diff --quiet -- Casks Formula; then
+            # Validate exactly the files that will be pushed, including after a partial update.
+            tap_dir="$(brew --repository batkiz/backit)"
+            cp Casks/*.rb "$tap_dir/Casks/"
+            cp Formula/*.rb "$tap_dir/Formula/"
+            brew readall --os=sequoia --arch=all batkiz/backit
+            git diff --check
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- Casks Formula
+            git commit -m 'Update Homebrew packages'
+            git push origin HEAD:"$GITHUB_REF_NAME_DEFAULT"
+          fi
+          exit "$failed"
+        env:
+          GITHUB_REF_NAME_DEFAULT: ${{ github.event.repository.default_branch }}
