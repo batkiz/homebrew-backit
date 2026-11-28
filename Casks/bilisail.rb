@@ -1,9 +1,9 @@
 cask "bilisail" do
   arch arm: "arm64", intel: "x64"
 
-  version "1.3.0+8"
-  sha256 arm:   "ea528ac03d920984ca088fa0dc5e370c4699a88bd6e8124e3278bffb7abff52c",
-         intel: "d7b2588a3f9269f57e569bc37e7a412883d1c4fec0e781fcc075200fd2a7998f"
+  version "1.3.1+0"
+  sha256 arm:   "8826b945345f607b295c430726422b54822ab5ea7b9c5e4d6504335d367d00dd",
+         intel: "4ce317e9af0d51885a583506c53ada97d63d920f7832d19522eba16b0b8253fb"
 
   url "https://github.com/CKopoer/BiliSail/releases/download/v#{version}/BiliSail-#{version}-macos-#{arch}.dmg"
   name "BiliSail"

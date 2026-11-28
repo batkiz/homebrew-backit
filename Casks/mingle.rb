@@ -1,9 +1,9 @@
 cask "mingle" do
   arch arm: "arm64", intel: "amd64"
 
-  version "0.4.11"
-  sha256 arm:   "b2414cedf72d70f7b6f4f9d3e200c926f1ec72bbf7e68285f1461eee7b2e704b",
-         intel: "e946dcf6cc860db3910e4f41b76931cf1ccb50c36293474b3cbe21b7f4db3121"
+  version "0.4.15"
+  sha256 arm:   "3f74ca7dc6097b69e7446c4520147590b27c2136ae6dcc1cb64323459fa1a03b",
+         intel: "21f4cf4c413f54bb5ab16c364428deac75d3eaac0f4a474918d3b699f9efdd19"
 
   url "https://github.com/earayu/Mingle/releases/download/v#{version}/mingle-#{version}-#{arch}.dmg"
   name "Mingle"
